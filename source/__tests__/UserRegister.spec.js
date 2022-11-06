@@ -72,13 +72,29 @@ describe('User Registration', () => {
     expect(body.validationErrors).not.toBeUndefined();
   });
 
-  it('returns Username cannot be null when username is null', async () => {
+  it('returns errors for both when username and email is null', async () => {
     const response = await postUser({
       username: null,
-      email: 'user1@mail.com',
+      email: null,
       password: 'Password',
     });
     const body = response.body;
-    expect(body.validationErrors.username).not.toBe('Username connot to be null');
+    expect(Object.keys(body.validationErrors)).toEqual(['username', 'email']);
+  });
+
+  it.each([
+    ['username', 'Username cannot be null'],
+    ['email', 'E-mail cannot be null'],
+    ['password', 'Password cannot be null'],
+  ])('when %s is null %s is received', async (field, expectedMessage) => {
+    const user = {
+      username: 'user1',
+      email: 'user1@mail.com',
+      password: 'Password',
+    };
+    user[field] = null;
+    const response = await postUser(user);
+    const body = response.body;
+    expect(body.validationErrors[field]).toBe(expectedMessage);
   });
 });
