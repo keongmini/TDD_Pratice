@@ -6,5 +6,8 @@ TDD practice with udemy lecture
 
 1. 개발환경 세팅 (eslint, prettier 설정방법)
 2. sequelize, sqlite 기반 db 구축 및 user table 생성, user signup test 코드 작성 및 api 설계
-3. development, test config 분리, req값 유효성 검사 express-validator, jest each 기능 사용해서 하나의 test로 통합(dynamic test)
+3. development, test config 분리
+4. req값 유효성 검사 express-validator, jest each 기능 사용해서 하나의 test로 통합(dynamic test)
+5. i18next 이용해서 다국어 처리 - 한국어 추가
+
 
