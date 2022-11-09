@@ -3,6 +3,7 @@ const app = require('../src/app');
 const User = require('../src/user/User');
 const sequelize = require('../src/config/database');
 const nodemailerStub = require('nodemailer-stub');
+const EmailService = require('../src/email/EmailService');
 
 beforeAll(() => {
   return sequelize.sync();
@@ -174,6 +175,34 @@ describe('User Registration', () => {
     const savedUser = user[0];
     expect(lastMail.content).toContain(savedUser.activationToken);
   });
+
+  it('returns 502 Bad Gateway when sending email fails', async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, 'sendAccountActivation')
+      .mockRejectedValue({ message: 'Failed to deliver email' });
+    const response = await postUser();
+    expect(response.status).toBe(502);
+    mockSendAccountActivation.mockRestore();
+  });
+
+  it('returns Email failure message when sending email fails', async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, 'sendAccountActivation')
+      .mockRejectedValue({ message: 'Failed to deliver email' });
+    const response = await postUser();
+    mockSendAccountActivation.mockRestore();
+    expect(response.body.message).toBe('E-mail Failure');
+  });
+
+  it('does not to save user to database if activation email fails', async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, 'sendAccountActivation')
+      .mockRejectedValue({ message: 'Failed to deliver email' });
+    await postUser();
+    mockSendAccountActivation.mockRestore();
+    const users = await User.findAll();
+    expect(users.length).toBe(0);
+  });
 });
 
 describe('Internationalization', () => {
@@ -186,6 +215,7 @@ describe('Internationalization', () => {
   const password_pattern = '비밀번호는 영어 대문자, 소문자, 숫자 각  1개씩 포함해야합니다.';
   const email_inuse = '사용중인 이메일입니다.';
   const user_create_success = '사용자 생성 완료';
+  const email_failure = '이메일 전송 실패';
 
   it.each`
     field         | value              | expectedMessage
@@ -228,5 +258,14 @@ describe('Internationalization', () => {
   it(`returns success message of ${user_create_success} when signup request is valid with valid and language`, async () => {
     const response = await postUser({ ...validUser }, { language: 'ko' });
     expect(response.body.message).toBe(`${user_create_success}`);
+  });
+
+  it(`returns ${email_failure} message when sending email fails and language is set as Korean`, async () => {
+    const mockSendAccountActivation = jest
+      .spyOn(EmailService, 'sendAccountActivation')
+      .mockRejectedValue({ message: 'Failed to deliver email' });
+    const response = await postUser({ ...validUser }, { language: 'ko' });
+    mockSendAccountActivation.mockRestore();
+    expect(response.body.message).toBe(email_failure);
   });
 });
