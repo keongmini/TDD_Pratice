@@ -10,5 +10,6 @@
     "user_create_success": "사용자 생성 완료",
     "email_failure" : "이메일 전송 실패",
     "account_activation_failure": "해당 계정은 활성화되어있지만 token은 검증되지 않았다.",
-    "account_activation_success": "계정 활성화 중"
+    "account_activation_success": "계정 활성화 중",
+    "validation_failure": "검증 실패"
 }
