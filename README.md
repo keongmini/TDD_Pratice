@@ -10,4 +10,9 @@ TDD practice with udemy lecture
 4. req값 유효성 검사 express-validator, jest each 기능 사용해서 하나의 test로 통합(dynamic test)
 5. i18next 이용해서 다국어 처리 - 한국어 추가
 
+--- 강의 삭제 됐다가 다시 올라옴 ---
+
+6. 가짜 이메일로 메일 전송 구형
+7. 에러 처리 미들웨어 생성 및 에러 관련 테스트 추가
+
 
