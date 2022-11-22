@@ -57,7 +57,6 @@ router.post('/api/1.0/users/token/:token', async (req, res, next) => {
     await UserService.activate(token);
     return res.send({ message: req.t('account_activation_success') });
   } catch (err) {
-    // return res.status(400).send({ message: req.t(err.message) });
     next(err);
   }
 });
@@ -66,6 +65,15 @@ router.get('/api/1.0/users', pagination, async (req, res) => {
   const { page, size } = req.pagination;
   const users = await UserService.getUsers(page, size);
   res.send(users);
+});
+
+router.get('/api/1.0/users/:id', async (req, res, next) => {
+  try {
+    const user = await UserService.getUser(req.params.id);
+    res.send(user);
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;
