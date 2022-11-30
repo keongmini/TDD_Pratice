@@ -12,5 +12,7 @@
     "account_activation_failure": "해당 계정은 활성화되어있지만 token은 검증되지 않았다.",
     "account_activation_success": "계정 활성화 중",
     "validation_failure": "검증 실패",
-    "user_not_found": "유저 없음"
+    "user_not_found": "유저 없음",
+    "authentication_failure": "올바르지 않은 인증",
+    "inactive_authentication_failure": "비활성화된 계정"
 }
